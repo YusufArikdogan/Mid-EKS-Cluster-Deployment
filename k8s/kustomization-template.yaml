@@ -1,0 +1,24 @@
+resources:
+  - app-deployment.yaml
+  - app-service.yaml
+  - db-deployment.yaml
+  - db-service.yaml
+  - grafana-server-deployment.yaml
+  - grafana-server-service.yaml
+  - prometheus-server-deployment.yaml
+  - prometheus-server-service.yaml
+  - ui-deployment.yaml
+  - ui-ingress.yaml
+  - ui-service.yaml
+
+images:
+  - name: IMAGE_TAG_UI
+    newName: "${IMAGE_TAG_FE}"
+  - name: IMAGE_TAG_API
+    newName: "${IMAGE_TAG_BE}"
+  - name: IMAGE_TAG_GR
+    newName: "${IMAGE_TAG_GR}"
+  - name: IMAGE_TAG_PR
+    newName: "${IMAGE_TAG_PR}"
+
+namespace: brc

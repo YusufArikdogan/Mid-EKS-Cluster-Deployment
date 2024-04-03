@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yaml
+    kompose.service.expose: carrental.yusufarikdogan.online
+    kompose.service.type: nodeport
+    kompose.version: 1.31.2 (a92241f79)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: ui
+  name: ui-blue
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: ui
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yaml
+        kompose.service.expose: carrental.yusufarikdogan.online
+        kompose.service.type: nodeport
+        kompose.version: 1.31.2 (a92241f79)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/k8s-default: "true"
+        io.kompose.service: ui
+    spec:
+      containers:
+        - env:
+            - name: APP_URL
+              value: http://carrental.yusufarikdogan.online:8080/car-rental/api/
+          image: IMAGE_TAG_UI
+          name: ui
+          ports:
+            - containerPort: 3000
+              hostPort: 80
+              protocol: TCP
+          resources: {}
+      restartPolicy: Always
+status: {}
