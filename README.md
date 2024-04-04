@@ -23,21 +23,25 @@ kubectl apply -f .
 command to convert our Docker Compose manifest to Kubernetes manifests. Deployment and service manifests  
 are automatically created for each resource.    
 
-Customization with Kustomize  
+Customization with Kustomize 
+
 We may have dozens of manifests depending on the size of the system to be deployed, so we'll use a separate  
 tool for customization. We'll use Kustomize, which is already set up to work with kubectl on the Jenkins server.  
+
 Firstly, we create a kustomization-template.yaml file:  
 
 sudo nano kustomization-template.yaml  
+
 Here, we add all the necessary resources as resources. The sections we'll be making changes to will be in the image    
 sections, so we add images: and assign variables for each name. These variables need to be specified here using the  
 tags created when Jenkinsfile-eks runs and the images are pushed to the ECR repo. We then use the envsubst command  
 to write the data prepared in the kustomization-template into a kustomization.yaml file. If it has a different name,  
-it won't work. The kustomization.yaml is ready with the changed data. Here's how we can manually make changes on the  
-Jenkins server:
+it won't work. The kustomization.yaml is ready with the changed data.  
+Here's how we can manually make changes on the Jenkins server:  
 
 kubectl kustomize <kustomization_directory>
 kubectl apply -k <kustomization_directory>
+
 But since we will be deploying all deployments and services in Kubernetes in the pipeline, we don't need to do it  
 manually. In our pipeline, the command sh "kubectl apply -k k8s/" performs all deployment operations.  
 
@@ -65,15 +69,15 @@ Check Jenkins Pipeline Configuration:
 Let's take a look at jenkins-eks. Actually, everything here works automatically, but if you've changed region  
 or app name, ensure to update these without missing. Here, we're using AWS resources again.  
 
-Firstly, we prepare Docker image names according to the build number. Jenkins assigns a tag with the build  
+1.  We prepare Docker image names according to the build number. Jenkins assigns a tag with the build  
 number for each build operation.  
-Secondly, we build images with the specified names.  
-Thirdly, we create an ECR repository on AWS.  
-Fourthly, we push the created images to the repository.  
-Fifthly, we create our namespace in Kubernetes.  
-Sixthly, we adjust and apply the image names we created with Kustomize.  
-Seventhly, we apply the ingress-controller configuration.  
-Lastly, there are destroy and post-action sections.  
+2. We build images with the specified names.  
+3. We create an ECR repository on AWS.  
+4. We push the created images to the repository.  
+5. We create our namespace in Kubernetes.  
+6. We adjust and apply the image names we created with Kustomize.  
+7. We apply the ingress-controller configuration.  
+8. There are destroy and post-action sections.  
 In the pipeline, in case of any errors, it directly goes to the post section and deletes the created resources  
 and images to avoid conflicts when restarted. In the destroy stage, the pipeline exits as we desire. As Proceed  
 and Abort. Here, we've set a 5-day time limit so that it self-destructs after 5 days. Alternatively, by clicking  
@@ -93,10 +97,8 @@ Choose Git as the SCM.
 Paste the URL of your GitHub repository where you pushed the files.  
 Select the token created earlier.  
 Optionally, set up triggers for the pipeline to run on push events.  
-Rename Jenkinsfile:  
 Let's change the name of our Jenkinsfile to jenkinsfile-eks in the lowest section.  
 
-Apply and Save:  
 Click "Apply" and then "Save."  
 
 Building the Pipeline  
@@ -129,8 +131,7 @@ Once this is done, go back to the AWS Certificate Manager service. Click on "Req
 "Request" and then "Finish."  
 
 Create DNS Records:  
-After the request is created, click on it. Under the "Create records in Route53" section, your certificates will  
-be selected. Click "Request" and then you can close it.  
+After the request is created, click on it. You`ll see the "Create records in Route53" section, click on it. Then Click "Request" and then you can close it.  
 
 Verify CNAME Record:  
 When you go back to Route53, you'll see a record named CNAME. Congratulations, you've successfully linked your SSL  
@@ -231,6 +232,8 @@ This command will perform the deployment process.
 You can also update the ui-ingress to reflect the changes in the new version. You can make changes to the target  
 port in the namespace and even monitor it over a different port domain.  
 By following these steps, you can smoothly transition between versions without interrupting the application.  
+
+# CLEANUP
 
 Once our project is completed, we need to perform cleanup operations.  
 
