@@ -261,4 +261,6 @@ installed and execute the following command to delete the Jenkins server and the
 terraform destroy -auto-approve  
 By running this command, you'll effectively remove the Jenkins server and all associated resources.  
 
-Congratulations! If you have any other questions or need further assistance, feel free to ask. Best of luck with your project! 🚀  
+Congratulations!  
+If you have any other questions or need further assistance, feel free to ask.  
+Best of luck with your project! 🚀    
